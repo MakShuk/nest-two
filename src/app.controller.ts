@@ -1,12 +1,18 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, HostParam, Request } from '@nestjs/common';
 import { AppService } from './app.service';
 
-@Controller()
+@Controller({ host: ':client1.local', path: '/' })
 export class AppController {
 	constructor(private readonly appService: AppService) {}
-
 	@Get()
-	getHello(): string {
-		return this.appService.getHello();
+	getInfo(@HostParam('client1') client1: string) {
+		return client1;
+	}
+
+	@Get('login')
+	getHi() {
+		return this.appService.getHi();
 	}
 }
+
+//host: ':client2.local:3000'
