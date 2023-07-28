@@ -4,8 +4,9 @@ import { AppService } from './app.service';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { CatsService } from './cats/cats.service';
 import { CatsModule } from './cats/cats.module';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { NotFoundExceptionFilter } from './exception/not-found.exception';
+import { UserModule } from './user/user.module';
 
 @Module({
 	controllers: [AppController],
@@ -16,7 +17,7 @@ import { NotFoundExceptionFilter } from './exception/not-found.exception';
 			useClass: NotFoundExceptionFilter,
 		},
 	],
-	imports: [CatsModule],
+	imports: [CatsModule, UserModule],
 })
 export class AppModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
