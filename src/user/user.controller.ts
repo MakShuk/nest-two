@@ -8,12 +8,15 @@ import {
 	Delete,
 	ParseArrayPipe,
 	UsePipes,
+	UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, createUserSchema } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ParseEnumPipe } from '@nestjs/common';
 import { JoiValidationPipe } from './pipe/joiValidation.pipe';
+import { CustomDecorator } from 'src/decorators/custom.decorator';
+import { CustomInterceptor } from 'src/Interceptor/custom.Interceptor';
 
 enum Gender {
 	MALE = 'male',
@@ -21,6 +24,7 @@ enum Gender {
 	OTHER = 'other',
 }
 
+@CustomDecorator('Class data')
 @Controller('user')
 export class UserController {
 	constructor(private readonly userService: UserService) {}
@@ -36,7 +40,8 @@ export class UserController {
 	} */
 
 	@Post()
-	@UsePipes(new JoiValidationPipe(createUserSchema))
+	@UseInterceptors(CustomInterceptor)
+	@CustomDecorator('metod data')
 	createUser(@Body() createUserDto: CreateUserDto) {
 		// Здесь "gender" будет содержать значение, которое соответствует одному из значений перечисления Gender
 		// выполнена валидация, что входное значение соответствует допустимым значениям перечисления
@@ -49,6 +54,7 @@ export class UserController {
 	}
 
 	@Get(':id')
+	@CustomDecorator('metod data')
 	findOne(@Param('id') id: string) {
 		return this.userService.findOne(+id);
 	}
