@@ -17,6 +17,9 @@ import { ParseEnumPipe } from '@nestjs/common';
 import { JoiValidationPipe } from './pipe/joiValidation.pipe';
 import { CustomDecorator } from 'src/decorators/custom.decorator';
 import { CustomInterceptor } from 'src/Interceptor/custom.Interceptor';
+import { TimeoutInterceptor } from 'src/Interceptor/timeout.interceptor';
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 enum Gender {
 	MALE = 'male',
@@ -40,11 +43,11 @@ export class UserController {
 	} */
 
 	@Post()
-	@UseInterceptors(CustomInterceptor)
+	@UseInterceptors(TimeoutInterceptor)
 	@CustomDecorator('metod data')
-	createUser(@Body() createUserDto: CreateUserDto) {
+	async createUser(@Body() createUserDto: CreateUserDto) {
 		// Здесь "gender" будет содержать значение, которое соответствует одному из значений перечисления Gender
-		// выполнена валидация, что входное значение соответствует допустимым значениям перечисления
+		//await delay(12000);
 		return createUserDto;
 	}
 
@@ -59,10 +62,10 @@ export class UserController {
 		return this.userService.findOne(+id);
 	}
 
-	@Patch(':id')
+	/* @Patch(':id')
 	update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
 		return this.userService.update(+id, updateUserDto);
-	}
+	} */
 
 	@Delete(':id')
 	remove(@Param('id') id: string) {
